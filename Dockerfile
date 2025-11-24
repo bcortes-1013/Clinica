@@ -11,6 +11,9 @@ WORKDIR /app
 # Copiar el JAR generado por Maven
 COPY target/clinica-0.0.1-SNAPSHOT.jar app.jar
 
+# Copiar carpeta Wallet
+COPY Wallet /app/wallet
+
 # Exponer el puerto del backend
 EXPOSE 8080
 

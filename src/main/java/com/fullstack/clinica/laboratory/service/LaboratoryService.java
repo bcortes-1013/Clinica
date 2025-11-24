@@ -1,8 +1,8 @@
-package com.fullstack.clinica.laboratorio.service;
+package com.fullstack.clinica.laboratory.service;
 
 import com.fullstack.clinica.exception.ResourceNotFoundException; // Semana 2 → la crearemos en paso 4
-import com.fullstack.clinica.laboratorio.model.Laboratorio;
-import com.fullstack.clinica.laboratorio.repository.LaboratorioRepository;
+import com.fullstack.clinica.laboratory.model.Laboratory;
+import com.fullstack.clinica.laboratory.repository.LaboratoryRepository;
 
 import lombok.extern.slf4j.Slf4j; // Lombok → para logs sin crear Logger manual
 import org.springframework.stereotype.Service;
@@ -25,16 +25,16 @@ import java.util.List;
  */
 @Slf4j
 @Service // Marca esta clase como "servicio" dentro del contexto de Spring
-public class LaboratorioService {
+public class LaboratoryService {
 
     // Inyección del repositorio para interactuar con la base de datos
-    private final LaboratorioRepository repository;
+    private final LaboratoryRepository repository;
 
     /**
      * Constructor principal (inyección de dependencias por constructor).
      * Spring se encarga de pasar automáticamente una instancia de LaboratorioRepository.
      */
-    public LaboratorioService(LaboratorioRepository repository) {
+    public LaboratoryService(LaboratoryRepository repository) {
         this.repository = repository;
     }
 
@@ -45,7 +45,7 @@ public class LaboratorioService {
     /**
      * Obtiene todos los laboratorios desde la base de datos.
      */
-    public List<Laboratorio> findAll() {
+    public List<Laboratory> findAll() {
         log.info("📚 Consultando todos los laboratorios en la base de datos");
         return repository.findAll();
     }
@@ -54,7 +54,7 @@ public class LaboratorioService {
      * Busca un laboratorio por su ID.
      * Si no existe, lanza una excepción personalizada.
      */
-    public Laboratorio findById(Long id) {
+    public Laboratory findById(Long id) {
         log.info("🔍 Buscando laboratorio con ID: {}", id);
         return repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("No se encontró el laboratorio con ID: " + id));
@@ -71,19 +71,19 @@ public class LaboratorioService {
      * 1️⃣ No permitir guardar un laboratorio con el mismo título y autor ya existentes.
      * 2️⃣ Registrar logs de INFO y WARN según la operación.
      */
-    public Laboratorio save(Laboratorio laboratorio) {
-        log.info("💾 Guardando laboratorio: {} - {}", laboratorio.getNombre(), laboratorio.getTipo());
+    public Laboratory save(Laboratory laboratorio) {
+        log.info("💾 Guardando laboratorio: {} - {}", laboratorio.getName());
 
         // Validación de duplicado: mismo nombre
         boolean existe = repository.findAll().stream()
-                .anyMatch(l -> l.getNombre().equalsIgnoreCase(laboratorio.getNombre()));
+                .anyMatch(l -> l.getName().equalsIgnoreCase(laboratorio.getName()));
 
         if (existe) {
-            log.warn("⚠️ Intento de guardar un laboratorio duplicado: {}", laboratorio.getNombre());
+            log.warn("⚠️ Intento de guardar un laboratorio duplicado: {}", laboratorio.getName());
             throw new IllegalArgumentException("Ya existe un laboratorio con el mismo título y autor.");
         }
 
-        Laboratorio guardado = repository.save(laboratorio);
+        Laboratory guardado = repository.save(laboratorio);
         log.info("✅ laboratorio guardado correctamente con ID: {}", guardado.getId());
         return guardado;
     }
@@ -92,21 +92,18 @@ public class LaboratorioService {
      * Actualiza un laboratorio existente.
      * Si no existe, lanza excepción de recurso no encontrado.
      */
-    public Laboratorio update(Long id, Laboratorio datosActualizados) {
+    public Laboratory update(Long id, Laboratory datosActualizados) {
         log.info("✏️ Actualizando laboratorio con ID: {}", id);
 
-        Laboratorio laboratorioExistente = findById(id); // lanza excepción si no existe
+        Laboratory laboratorioExistente = findById(id); // lanza excepción si no existe
 
-        laboratorioExistente.setNombre(datosActualizados.getNombre());
-        laboratorioExistente.setDescripcion(datosActualizados.getDescripcion());
-        laboratorioExistente.setTipo(datosActualizados.getTipo());
-        laboratorioExistente.setCapacidad(datosActualizados.getCapacidad());
-        laboratorioExistente.setEstado(datosActualizados.getEstado());
-        laboratorioExistente.setTipoAnalisis(datosActualizados.getTipoAnalisis());
+        laboratorioExistente.setName(datosActualizados.getName());
+        laboratorioExistente.setDescription(datosActualizados.getDescription());
+        laboratorioExistente.setState(datosActualizados.getState());
 
 
-        Laboratorio actualizado = repository.save(laboratorioExistente);
-        log.info("✅ laboratorio actualizado correctamente: {}", actualizado.getNombre());
+        Laboratory actualizado = repository.save(laboratorioExistente);
+        log.info("✅ laboratorio actualizado correctamente: {}", actualizado.getName());
         return actualizado;
     }
 
@@ -127,14 +124,13 @@ public class LaboratorioService {
     }
 
     // ============================================================
-    // 🔸 Semana 2 → Posibles extensiones (consultas personalizadas)
+    // Consultas personalizadas
     // ============================================================
     /**
-     * Devuelve una lista de laboratorios filtrados por tipo.
-     * Se agregará el método findByTipo en el repositorio (Paso 5).
+     * Devuelve una lista de laboratorios filtrados por estado.
      */
-    public List<Laboratorio> findByTipo(String tipo) {
-        log.info("📖 Buscando laboratorios del tipo: {}", tipo);
-        return repository.findByTipo(tipo);
+    public List<Laboratory> findByState(String state) {
+        log.info("📖 Buscando laboratorios con el estado: {}", state);
+        return repository.findByState(state);
     }
 }

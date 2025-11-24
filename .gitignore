@@ -33,5 +33,5 @@ build/
 .vscode/
 
 ### Wallet ###
-/wallet/*
-!wallet/.gitkeep
+/Wallet/*
+!Wallet/.gitkeep

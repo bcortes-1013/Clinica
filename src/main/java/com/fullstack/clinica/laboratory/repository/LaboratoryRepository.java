@@ -1,9 +1,9 @@
-package com.fullstack.clinica.laboratorio.repository;
+package com.fullstack.clinica.laboratory.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import com.fullstack.clinica.laboratorio.model.Laboratorio;
+import com.fullstack.clinica.laboratory.model.Laboratory;
 
 import java.util.List;
 
@@ -24,21 +24,16 @@ import java.util.List;
  * ===============================================================
  */
 @Repository
-public interface LaboratorioRepository extends JpaRepository<Laboratorio, Long> {
+public interface LaboratoryRepository extends JpaRepository<Laboratory, Long> {
 
     // ============================================================
-    // 🔸 Semana 2 → Consulta personalizada (criterio de complejidad)
+    // Consulta personalizada (criterio de complejidad)
     // ============================================================
     /**
-     * Busca todos los laboratorios de un tipo específico.
+     * Busca todos los laboratorios según su estado.
      * 
-     * Spring Data JPA interpreta automáticamente el nombre del método y
-     * genera la consulta equivalente:
-     * 
-     * SELECT * FROM LABORATORIO WHERE TIPO = :tipo
-     * 
-     * @param tipo Nombre del tipo (coincidencia exacta o parcial).
-     * @return Lista de laboratorios que pertenecen al tipo indicado.
+     * @param state (ACTIVO o INACTIVO).
+     * @return Lista de laboratorios que pertenecen al estado indicado.
      */
-    List<Laboratorio> findByTipo(String tipo);
+    List<Laboratory> findByState(String state);
 }

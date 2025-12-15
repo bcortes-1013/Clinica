@@ -80,7 +80,7 @@ public class LaboratoryService {
 
         if (existe) {
             log.warn("⚠️ Intento de guardar un laboratorio duplicado: {}", laboratorio.getName());
-            throw new IllegalArgumentException("Ya existe un laboratorio con el mismo título y autor.");
+            throw new IllegalArgumentException("Ya existe un laboratorio con el mismo nombre.");
         }
 
         Laboratory guardado = repository.save(laboratorio);
@@ -95,14 +95,14 @@ public class LaboratoryService {
     public Laboratory update(Long id, Laboratory datosActualizados) {
         log.info("✏️ Actualizando laboratorio con ID: {}", id);
 
-        Laboratory laboratorioExistente = findById(id); // lanza excepción si no existe
+        Laboratory laboratoryExist = findById(id); // lanza excepción si no existe
 
-        laboratorioExistente.setName(datosActualizados.getName());
-        laboratorioExistente.setDescription(datosActualizados.getDescription());
-        laboratorioExistente.setState(datosActualizados.getState());
+        laboratoryExist.setName(datosActualizados.getName());
+        laboratoryExist.setDescription(datosActualizados.getDescription());
+        laboratoryExist.setState(datosActualizados.getState());
 
 
-        Laboratory actualizado = repository.save(laboratorioExistente);
+        Laboratory actualizado = repository.save(laboratoryExist);
         log.info("✅ laboratorio actualizado correctamente: {}", actualizado.getName());
         return actualizado;
     }
